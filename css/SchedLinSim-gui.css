@@ -1,0 +1,90 @@
+/* layout & sizing */
+body {
+	min-width: 424px;
+}
+
+.card-column-container {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+.card-column-grow {
+	display: flex;
+	flex: 1;
+	flex-grow: 1
+}
+
+#presetTableCol {
+	max-height: 20rem;
+}
+
+/* display */
+.nav-icon {
+	font-size: 1.4rem;
+	color: #fff;
+	cursor: pointer;
+}
+.nav-icon:active {
+	color: #ddd;
+}
+
+.sg-section-title {
+	font-size: 1.1rem;
+}
+
+.sg-textarea {
+	font-family: monospace, monospace;
+	font-size: 0.8rem !important;
+	line-height: 0.9rem;
+	min-height: 200px;
+}
+
+/* timeline */
+.timeline-container-outer {
+	min-height: 60px;
+}
+
+.vis-item {
+	top: 10px !important;
+}
+
+.vis-custom-time {
+	pointer-events: none;
+	background-color: #ebb;
+}
+
+/* table results */
+.tab-res {
+	font-family: monospace, monospace;
+	font-size: 0.9rem !important;
+	text-align: right;
+	vertical-align: middle !important;
+}
+.tab-right {
+	text-align: right;
+	vertical-align: middle !important;
+}
+
+/* pie chart */
+.single-chart-container {
+	min-height: 300px;
+	position: relative;
+}
+
+/* multirun charts */
+.chart-container {
+	position: relative;
+	height:600px;
+	width:100%;
+}
+
+/* animations */
+.rot180-start {
+	transform: rotate(0deg);
+	transition: all .4s;
+	transition-timing-function: cubic-bezier(.65,0,.35,1);
+}
+.rot180-end {
+	transform: rotate(-180deg);
+}

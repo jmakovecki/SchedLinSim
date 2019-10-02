@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link href="./css/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
+	<link href="./css/Chart.min.css" rel="stylesheet" type="text/css" />
+	<link href="./css/SchedLinSim-gui.css" rel="stylesheet" type="text/css" />
+	<link href="./icons/Feather.css" rel="stylesheet" type="text/css" />
+
+	<title>SchedLinSim</title>
+</head>
+<body class="mb-3">
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+ 		<a class="navbar-brand mr-auto" href="#">Simulator</a>
+		<i id="btnSettings" class="nav-icon icon-settings mr-3" onclick="SimGUI.guiSettings()"></i>
+		<i id="btnAbout" class="nav-icon icon-info" onclick="SimGUI.aboutModal()"></i>
+	</nav>
+
+	<div>
+		<div id="main-container" class="container-fluid px-0">
+
+			<div class="row mt-3 mt-md-4 mx-0">
+				<div class="col">
+					<div class="card bg-light">
+						<div class="card-body py-md-2">
+							<div id="simulationControls" class="row d-flex align-items-center flex-row">
+								<div class="col-md-4 sg-section-title">
+									Setup Simulation
+								</div>
+								<div class="d-flex flex-row col-md-4 mt-3 mt-md-0">
+									<select id="selectSimulationPreset" class="custom-select mr-2">
+										<option value="0" selected>Presets</option>
+									</select>
+									<button id="btnSelectSimulationPreset" type="button"
+										class="btn btn-outline-primary icon-list"
+										data-toggle="tooltip" data-placement="top" title="Detailed preset selection"></button>
+								</div>
+								<div class="col-md-4 d-flex flex-row mt-3 mt-md-0">
+									<button id="btnNewConfig" type="button"
+										class="btn btn-block btn-outline-primary mr-2 mt-0 icon-file-plus"
+										data-toggle="tooltip" data-placement="top" title="Write new simulation"></button>
+									<button id="btnImportJSON" type="button"
+										class="btn btn-block btn-outline-primary mr-2 mt-0 icon-upload"
+										data-toggle="tooltip" data-placement="top" title="Import simulation"></button>
+									<button id="btnExportJSON" type="button"
+										class="btn btn-block btn-outline-primary mr-2 mt-0 icon-download"
+										data-toggle="tooltip" data-placement="top" title="Export JSON"></button>
+									<button id="btnResetSettings" type="button"
+										class="btn btn-block btn-outline-danger mt-0 icon-delete"
+										data-toggle="tooltip" data-placement="top" title="Reset settings"></button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row mt-3 mx-0">
+				<div class="col">
+					<div class="card">
+						<div id="settingsHeader" class="card-header d-flex align-items-center flex-row py-2" onclick="SimGUI.toggleSettings()">
+							<div class="sg-section-title mr-2">Simulation Settings</div>
+							<div id="settingsToggle" class="rot180-start rot180-end icon-chevron-down mr-auto"></div>
+
+							<button id="btnApplySettings" type="button" class="set btn btn-sm btn-outline-primary icon-save"
+								data-toggle="tooltip" data-placement="top" title="Apply edits"></button>
+						</div>
+						<div id="settingsBody" class="card-body pt-0" style="display: none">
+							<div class="row">
+								<div class="col-md">
+									<div class="card-column-container">
+										<div class="sg-section-title mt-4">
+											General Settings
+										</div>
+										<table class="table table-borderless mt-3">
+											<tbody>
+												<tr>
+													<td class="py-auto">Default Class</td>
+													<td class="py-2">
+														<select class="set form-control form-control-sm w-100" id="selectDefaultClass">
+															<option value="0" selected>none</option>
+														</select>
+													</td>
+												</tr>
+												<tr>
+													<td class="py-auto">Simulation name</td>
+													<td class="py-2">
+														<input type="text" id="inputSimName" class="set form-control form-control-sm">
+													</td>
+												</tr>
+												<tr>
+													<td class="py-auto">Simulation length</span>
+													<td class="py-2">
+														<input type="text" id="inputSimLen" class="set form-control form-control-sm">
+													</td>
+												</tr>
+												<tr>
+													<td class="py-auto">Timer tick length</td>
+													<td class="py-2">
+														<input type="text" id="inputTimerTickLen" class="set form-control form-control-sm">
+													</td>
+												</tr>
+											</tbody>
+										</table>
+
+										<div class="d-flex align-items-center flex-row mt-4">
+											<div class="sg-section-title mr-auto">
+												<span class="mr-2">Scheduling Classes</span>
+												<i id="classesDisabledInfo" class="mr-2 icon-info text-info" style="font-size: 1.2rem" data-toggle="tooltip"
+													data-placement="top" title="Apply edits (save button) to determine active classes and enable class controls."></i>
+											</div>
+											<button id="importSchedClass" type="button" class="set btn btn-sm btn-outline-primary
+												icon-upload mr-2" data-toggle="popover" data-placement="top" data-trigger="hover"
+												title="Import scheduling class" data-content="WARNING: This function parses a text file into code using 'eval()' - only import JavaScript files that you trust!"
+												onclick="SimGUI.importClass()"></button>
+										</div>
+										<div class="mt-3 card-column-grow">
+											<div class="h-100 w-100">
+												<table class="table table-hover mb-0 w-100">
+													<tbody id="classTable">
+														<tr>
+															<td>
+																<div class="d-flex justify-content-center h-100">
+																	<div class="spinner-border mt-3" role="status">
+																		<span class="sr-only">Loading...</span>
+																	</div>
+																</div>
+															</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="col-md">
+									<div class="card-column-container">
+										<div class="d-flex align-items-center flex-row mt-3">
+											<div class="sg-section-title mr-auto">
+												Process Definitions
+											</div>
+											<button id="btnResetProcDef" type="button" class="set btn btn-sm btn-outline-danger
+												icon-delete" data-toggle="tooltip" data-placement="top" title="Reset process definitions"
+												onclick="SimGUI.resetProcDef()"></button>
+										</div>
+										<div class="card-column-grow mt-3">
+											<div class="h-100 w-100">
+												<textarea id="processDefArea" class="set form-control w-100 sg-textarea"
+													style="height: 100%" autocomplete="off" autocorrect="off"
+													autocapitalize="off" spellcheck="false"></textarea>
+											</div>
+										</div>
+										<div class="d-flex align-items-center flex-row mt-2 text-secondary" style="font-size: 0.9rem">
+											<span id="procTextAreaRow">0</span>:<span id="procTextAreaCol">0</span>
+											&nbsp(<span id="procTextAreaPos">0</span><span class="mr-auto">)</span>
+											<span class="d-flex justify-content-end">Indent</span>&nbsp<span class="mr-2">with</span>
+											<select id="procIndentType" class="set d-flex justify-content-end form-control form-control-sm mr-2 text-secondary" style="width: 7rem">
+												<option value="2">2 spaces</option>
+												<option value="3">3 spaces</option>
+												<option value="4" selected>4 spaces</option>
+												<option value="6">6 spaces</option>
+												<option value="8">8 spaces</option>
+												<option value="-1">tabs</option>
+											</select>
+											<button type="button" onclick="SimGUI.indentTextArea('processDefArea')" class="set d-flex justify-content-end btn btn-outline-secondary btn-sm">Indent</button>
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="row mx-0 mt-4">
+				<div class="col">
+					<nav class="mt-3">
+						<div class="nav nav-tabs nav-justified" id="nav-tab" role="tablist">
+							<a class="nav-item nav-link active" id="single-run-tab" data-toggle="tab" href="#single-run-gui" role="tab">SINGLE RUN</a>
+							<a class="nav-item nav-link" id="multi-run-tab" data-toggle="tab" href="#multi-run-gui" role="tab">MULTIPLE RUNS</a>
+						</div>
+					</nav>
+					<div class="tab-content mt-4" id="nav-tabContent">
+
+						<div class="tab-pane fade show active" id="single-run-gui" role="tabpanel">
+							<div id="singleRunCard" class="card">
+								<div class="card-header py-2">
+									<div class="sg-section-title">Simulation Controls</div>
+								</div>
+								<div class="card-body bg-light">
+									<div class="row m-0">
+										<div class="col-12 timeline-container-outer px-0">
+											<div id="loading-container" class="d-flex justify-content-center align-items-center h-100">
+												<div class="spinner-border" role="status">
+													<span class="sr-only">Loading...</span>
+												</div>
+											</div>
+											<div id="timeline-container"></div>
+										</div>
+										<div class="col-md-6 d-flex align-items-center flex-row px-0 pr-md-1 mt-3">
+											<button id="btnSingleRun" type="button" onclick="SimGUI.simRun()"
+												class="runCtrl btn btn-outline-primary mr-2 icon-fast-forward"
+												data-toggle="tooltip" data-placement="top" title="Run simulation"
+												disabled></button>
+											<button id="btnAnimateRun" type="button" class="runCtrl btn
+												btn-outline-primary mr-2 icon-play" data-toggle="tooltip"
+												data-placement="top" title="Animate simulation" disabled></button>
+											<button id="btnSimBreak" type="button" class="runCtrl btn
+												btn-outline-danger icon-x-square mr-2" data-toggle="tooltip"
+												data-placement="top" title="Break simulation" disabled></button>
+											<div class="input-group">
+												<input id="inputStep" type="text" class="runCtrl form-control" value="1" disabled>
+												<div class="input-group-append">
+													<button id="btnInputStep" class="runCtrl btn btn-outline-primary
+														icon-skip-forward" type="button" data-toggle="tooltip"
+														data-placement="top" title="Step" disabled></button>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-6 d-flex align-items-center flex-row px-0 pl-md-1 mt-3">
+											<div class="input-group">
+												<input id="inputRunTo" type="text" class="runCtrl form-control" placeholder="time" disabled>
+												<div class="input-group-append">
+													<button id="btnInputRunTo" class="runCtrl btn btn-outline-primary
+														mr-2" type="button" data-toggle="tooltip" data-placement="top"
+														title="Skip to time" disabled>
+															<i class="icon-skip-forward"></i>
+															<i class="icon-clock"></i>
+													</button>
+												</div>
+											</div>
+											<div class="input-group">
+												<input id="inputView" type="text" class="form-control" placeholder="time">
+												<div class="input-group-append">
+													<button id="btnInputView" class="btn btn-outline-primary icon-search" type="button"
+														data-toggle="tooltip" data-placement="top" title="View time"></button>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="card mt-3">
+								<div class="card-header d-flex align-items-center flex-row" onclick="SimGUI.toggleResultsSingle()">
+									<div class="sg-section-title mr-2">Simulation Results</div>
+									<div id="singleResToggle" class="rot180-start rot180-end icon-chevron-down mr-auto"></div>
+								</div>
+								<div id="singleResBody" class="card-body pt-0" style="display: none">
+									<div class="row m-0">
+										<div class="col-md-6">
+											<div class="sg-section-title mt-4">
+												General
+											</div>
+											<div class="mt-3">
+												<table class="table table-sm table-hover">
+													<tbody id="singleResTable">
+														<tr>
+															<th scope="row" colspan="2">CPU load</th>
+														</tr>
+														<tr>
+															<td>Average</td>
+															<td id="cpuAvg" class="tab-res">-</td>
+														</tr>
+														<tr>
+															<th scope="row" colspan="2">Process latency</th>
+														</tr>
+														<tr>
+															<td>Average</td>
+															<td id="latencyAvg" class="tab-res">-</td>
+														</tr>
+														<tr>
+															<td>Standard Deviation</td>
+															<td id="latencyDev" class="tab-res">-</td>
+														</tr>
+														<tr>
+															<th scope="row" colspan="2">Process turnaround time</th>
+														</tr>
+														<tr>
+															<td>Processes completed</td>
+															<td id="turnaroundCompleted" class="tab-res">-</td>
+														</tr>
+														<tr>
+															<td>Average</td>
+															<td id="turnaroundAvg" class="tab-res">-</td>
+														</tr>
+														<tr>
+															<td>Standard Deviation</td>
+															<td id="turnaroundDev" class="tab-res">-</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+
+											<div class="sg-section-title mt-4">
+												Per Process
+											</div>
+											<div class="mt-3">
+												<table class="table table-sm table-hover">
+													<tbody id="singleProcTable">
+														<tr>
+															<td>-</td>
+															<td>-</td>
+															<td>-</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+
+
+										<div class="col-md-6">
+											<div class="row">
+												<div class="sg-section-title col-12 mt-4">
+													Process Execution Statictics
+												</div>
+												<div class="col-12 w-100 mt-4">
+													<div class="single-chart-container">
+														<canvas id="execTimeChart"></canvas>
+													</div>
+												</div>
+												<div class="col-12 w-100 mt-4">
+													<div id="execBarChart" class="single-chart-container d-none">
+
+													</div>
+												</div>
+												<div id="procLatStatsTitle" class="sg-section-title col-12 mt-4 d-none">
+													Process Latency Statistics
+												</div>
+												<div class=" col-12 w-100 mt-4">
+													<div id="latBarChart" class="single-chart-container d-none">
+
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="tab-pane fade" id="multi-run-gui" role="tabpanel">
+							<div class="card">
+								<div class="card-header py-2">
+									<div class="sg-section-title">Simulation Controls</div>
+								</div>
+								<div class="card-body bg-light">
+									<div class="row justify-content-center m-0">
+										<div id="multiControls" class="col-md-6 col-lg-4 px-0 d-flex align-items-center flex-row">
+											<div class="input-group">
+												<input id="inputMultiRun" type="text" class="runCtrl form-control"
+													placeholder="times" value="50" disabled>
+												<div class="input-group-append">
+													<button id="btnMultiRun" class="runCtrl btn btn-outline-primary
+														icon-fast-forward" type="button" data-toggle="tooltip"
+														data-placement="top" title="Run simulations" disabled></button>
+												</div>
+											</div>
+											<div id="btnDrawGraphsHolder"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="card mt-3">
+								<div class="card-header d-flex align-items-center flex-row" onclick="SimGUI.toggleResultsMulti()">
+									<div class="sg-section-title mr-2">Simulation Results</div>
+									<div id="multiResToggle" class="rot180-start rot180-end icon-chevron-down mr-auto"></div>
+								</div>
+								<div id="multiResBody" class="card-body pt-0" style="display: none">
+									<div class="row justify-content-center m-0">
+										<div class="col-0 col-md-8 col-lg-6">
+											<div class="sg-section-title mt-4">
+												General
+											</div>
+											<table class="table table-sm table-hover mt-3">
+												<tbody id="multiResTable">
+													<tr>
+														<td>-</td>
+														<td>-</td>
+													</tr>
+												</tbody>
+											</table>
+											<div class="sg-section-title mt-4">
+												Per Process
+											</div>
+											<div class="mt-3">
+												<table class="table table-sm table-hover">
+													<tbody id="multiProcTable">
+														<tr>
+															<td>-</td>
+															<td>-</td>
+															<td>-</td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+										<div id="graphArea" class="col-12 row m-0 p-0"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- GUI settings modal -->
+	<div class="modal fade" id="guiSettingsModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Settings</h5>
+					<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+				</div>
+				<div class="modal-body">
+					<table class="table table-borderless">
+						<tbody>
+							<tr>
+								<td class="py-auto">Animated simulation frame</td>
+								<td class="py-2">
+									<input type="text" id="inputSimStepTime" class="form-control form-control-sm" value="0.5s">
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<button type="button" class="btn btn-block btn-outline-danger btn-sm"
+						onclick="localStorage.clear()">Delete settings and autosave data</button>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary" onclick="SimGUI.guiSettingsCallback()">Save changes</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- about modal -->
+	<div class="modal fade" id="aboutModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">About</h5>
+					<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+				</div>
+				<div class="modal-body text-center mt-2">
+					<h4 class="mt-4">SchedLinSim Scheduling Simulator</h4>
+					<div>Version <span id="sim-version"></span></div>
+					<div class="mt-5">Author</div>
+					<h5 class="mt-1">Jan Makovecki</h5>
+					<div class="mt-3">Under the mentorship of</div>
+					<h5 class="mt-1 mb-0">doc. dr. Tomaž Dobravec</h5>
+					<h5 class="mt-1 mb-5">doc. dr. Jure Žabkar</h5>
+					<div class="mb-1">
+						<a class="text-secondary" href="./README.md.html" target="_blank">View the simulator README</a>
+					</div>
+					<div class="mb-1">
+						<a class="text-secondary" href="simulator/docs/index.html" target="_blank">Simulator documentation</a>
+					</div>
+					<div class="mb-1">
+						<a class="text-secondary" href="simulator/docs/templates/Simulation-definition-template.js" target="_blank">Simulation definition template</a>
+					</div>
+					<div class="mb-5">
+						<a class="text-secondary" href="simulator/docs/templates/SchedClass-template.js" target="_blank">Scheduling class template</a>
+					</div>
+					<div class="mb-3">
+						<a class="text-secondary" href="./credits.txt" target="_blank">View included libraries and licensing information</a>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- preset selection modal -->
+	<div class="modal fade" id="presetSelectionModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Select a preset</h5>
+					<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+				</div>
+				<div class="modal-body">
+					<div class="container-fluid mt-2">
+						<div class="row">
+							<div id="presetTableCol" class="col-lg-6 overflow-auto border mb-4 mb-lg-2 px-0">
+								<table class="table table-sm table-borderless table-hover">
+									<tbody id="presetTableBody">
+
+									</tbody>
+								</table>
+							</div>
+							<div class="col-lg-6 mb-3 mb-lg-2">
+								<h5>Preset Description</h5>
+								<div id="presetDescription" class="text-secondary">
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary" onclick="SimGUI.loadPresetSelection()"
+						data-dismiss="modal">Apply preset</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- scheduling class settings modal -->
+	<div class="modal fade" id="schedClassModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="schedClassModalTitle"></h5>
+					<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+				</div>
+				<div class="modal-body">
+					<div id="schedClassDescription" class="text-secondary"></div>
+					<div class="d-flex align-items-center flex-row mt-3">
+						<div class="sg-section-title mr-auto">
+							Scheduling class parameters
+						</div>
+						<button id="btnResetClassParams" type="button" class="btn btn-sm btn-outline-danger
+							icon-delete" data-toggle="tooltip" data-placement="top" title="Reset to defaults"
+							onclick="SimGUI.classControl.modalReset()"></button>
+					</div>
+					<div class="h-100 w-100 mt-3">
+						<textarea id="classParamArea" class="set form-control w-100 sg-textarea"
+							style="height: 100%" autocomplete="off" autocorrect="off"
+							autocapitalize="off" spellcheck="false"></textarea>
+					</div>
+					<div class="d-flex align-items-center flex-row mt-2 text-secondary" style="font-size: 0.9rem">
+						<span id="classTextAreaRow">0</span>:<span id="classTextAreaCol">0</span>
+						&nbsp(<span id="classTextAreaPos">0</span><span class="mr-auto">)</span>
+						<span class="d-flex justify-content-end">Indent</span>&nbsp<span class="mr-2">with</span>
+						<select id="classIndentType" class="set d-flex justify-content-end form-control form-control-sm mr-2 text-secondary" style="width: 7rem">
+							<option value="2">2 spaces</option>
+							<option value="3">3 spaces</option>
+							<option value="4" selected>4 spaces</option>
+							<option value="6">6 spaces</option>
+							<option value="8">8 spaces</option>
+							<option value="-1">tabs</option>
+						</select>
+						<button type="button" onclick="SimGUI.indentTextArea('classParamArea')" class="set d-flex justify-content-end btn btn-outline-secondary btn-sm">Indent</button>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary" onclick="SimGUI.classControl.modalApply()">Save changes</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- multirun long graph draw modal -->
+	<div class="modal fade" id="graphLoadModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header bg-warning ">
+					<h5 class="modal-title">Warning</h5>
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					A large number of simulations was run (>300). Drawing large graphs might be computationally
+					demanding. Additionally, their clarity will be greatly reduced. Are you sure you wish to continue?
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+					<button type="button" onclick="SimGUI.drawGraphs()" class="btn btn-primary"
+						data-dismiss="modal">Continue</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- config load overwrite modal -->
+	<div class="modal fade" id="loadModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header bg-warning ">
+					<h5 class="modal-title">Warning</h5>
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					Your simulation configuration contains unsaved changes that have not been exported to JSON. This
+					will overwrite them. Are you sure you want to continue?
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+					<button type="button" onclick="SimGUI.contLoad()" class="btn btn-primary">Continue</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- JS Error Modal -->
+	<div class="modal fade" id="errorModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header bg-light text-danger">
+					<h5 class="modal-title">An Error Has Occured</h5>
+					<button type="button" class="close" data-dismiss="modal">
+						<span>&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="text-danger">
+						<code id="errorTextContainer">
+							This beeth an error, sire.
+						</code>
+					</div>
+					<div class="mt-4 text-right text-muted">
+						See console output for more information.
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- simulation configuration upload input -->
+	<input id="inputUploadSettings" type="file" accept="application/json,text/*" class="d-none"
+		onchange="SimGUI.importSettingsCallback(this.files)">
+
+	<!-- scheduling class upload input -->
+	<input id="inputUploadClass" type="file" accept="application/javascript,text/*" class="d-none"
+		onchange="SimGUI.importClassCallback(this.files)">
+
+
+	<!-- JavaScript Imports -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script type="text/javascript" src="./js/jquery-3.4.1.min.js"></script>
+	<script type="text/javascript" src="./js/popper.min.js"></script>
+	<script type="text/javascript" src="./js/bootstrap.min.js"></script>
+	<!-- Simulator -->
+	<script type="text/javascript" src="./simulator/redblack.js"></script>
+	<script type="text/javascript" src="./simulator/SimulationPresets.js"></script>
+	<script type="text/javascript" src="./simulator/SchedLinSim.js"></script>
+	<script type="text/javascript" src="./simulator/classes/FCFSClass.js"></script>
+	<script type="text/javascript" src="./simulator/classes/RoundClass.js"></script>
+	<script type="text/javascript" src="./simulator/classes/SJFClass.js"></script>
+	<script type="text/javascript" src="./simulator/classes/RLClass.js"></script>
+	<script type="text/javascript" src="./simulator/classes/LinuxOriginalClass.js"></script>
+	<script type="text/javascript" src="./simulator/classes/LinuxOnClass.js"></script>
+	<script type="text/javascript" src="./simulator/classes/LinuxO1Class.js"></script>
+	<script type="text/javascript" src="./simulator/classes/LinuxFairClass.js"></script>
+	<!-- Graphics -->
+	<script src="./js/vis-timeline-graph2d.min.js" rel="script"></script>
+	<script src="./js/Chart.min.js" rel="script"></script>
+	<script src="./js/SchedLinSim-gui.js"></script>
+</body>
+</html>
