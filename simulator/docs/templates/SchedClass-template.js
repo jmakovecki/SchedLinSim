@@ -5,7 +5,7 @@
  * file and its comments for further info on implementing a scheduling class.
  *
  * In the comments, we'll mark the parts that are not completely necessary as "optional code".
- * We'll mark the parts that you need to re-implement as "custom code".
+ * We'll mark the parts that need to be re-implemented as "custom code".
  * Assume that everything else should be left as it is.
  *
  * @extends SchedClass

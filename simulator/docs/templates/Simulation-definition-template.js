@@ -1,8 +1,7 @@
 /**
  * SimulationDefinitionTemplate is a simulation definition that serves as an example for writing simulation
  * definitions. It contains comments that explain the required simulation settings, process definitions, process
- * behaviors and extra functionality that definitions offer. The template is
- * implemented in the file
+ * behaviors and extra functionality that the definitions offer. The template is implemented in the file
  * {@link templates/Simulation-definition-template.js /docs/templates/Simulation-definition-template.js}.
  *
  * Note that simulation definitions are usually packaged as JSON files, but we used a JavaScript file here since we need
@@ -20,8 +19,8 @@
  * use other units, such as microseconds or minutes.
  *
  * Some time values in the simulation have to be precise, while others can be defined as an interval, from which an
- * exact value will be chosen at random. "1 ms" is always a millisecond, but ["2ms", "42ms"] can be anywhere from 2 to
- * 42 milliseconds.
+ * exact value of nanoseconds is chosen at random. "1 ms" is always a millisecond, but ["2ms", "42ms"] can be anything
+ * from 2 to 42 milliseconds.
  */
 
 var SimulationDefinitionTemplate = {
@@ -37,8 +36,8 @@ var SimulationDefinitionTemplate = {
 	 * Required, precise, > 0. */
 	"timerTickLen": "0.5ms",
 	/* The default policy for scheduling processes in the simulator, valid values are the names of registered scheduling
-	 * classes. Every process can define its own scheduling policy, so this is only required when a process with no
-	 * policy definition exists. */
+	 * classes. Every process can define its own scheduling policy, so this field is only required when a process with
+	 * no policy definition exists. */
 	"policy": "RoundClass",
 	/* The simulation description. Optional. */
 	"description" : "An example simulation definition.",
@@ -47,7 +46,7 @@ var SimulationDefinitionTemplate = {
 	 * classes of higher priority will always run before the processes of classes with lower priority. If processes
 	 * of multiple scheduling classes exist in the simulation, then this list can be used to set the priority of the
 	 * classes, in descending priority order. If it is not set, the default class order will be used. This list does
-	 * not need to contain all used classes either, but the ones it does will get higher priority. Optional. */
+	 * not need to contain all the used classes either, but the ones it does will get higher priority. Optional. */
 	"classPrio": ["FCFSClass", "RoundClass"],
 
 	/* Scheduling class parameters. These differ from class to class and are ususally explained in scheduling class
@@ -104,7 +103,7 @@ var SimulationDefinitionTemplate = {
 					 * and 4 ms. Required, precise or random. */
 					"block": ["2ms", "4ms"],
 					/* Priority, differs from class to class. See scheduling class descriptions for more. FCFSClass
-					 * does not use priority, but it still needs to be here. Required. */
+					 * does not use priority, but it still needs to be defined here. Required. */
 					"priority": 0
 				},
 				/* The second behavior entry. It will become active once its conditions are met. The conditions for
@@ -175,8 +174,8 @@ var SimulationDefinitionTemplate = {
 }
 
 var SimulationDefinitionTemplateShort =
-/* This is a version of the above definition without the comment. If it is copied into its own file and saved as JSON,
- * it can be directly loaded into the simulator and ran to see it in action. */
+/* This is a version of the above definition without the comments. If it is copied into its own file and saved as JSON,
+ * it can be directly loaded into the simulator and run to see the resulting simulation. */
 {
 	"name": "Example",
 	"simLen": "30ms",
@@ -236,7 +235,7 @@ var SimulationDefinitionTemplateShort =
 
 
 var SimpleSystemExample =
-/* If you the following object is copied into a new file and save it as JSON, it becomes a valid simulation definition
+/* If the following object is copied into a new file and saved as JSON, it becomes a valid simulation definition
  * and can be loaded into the simulator. It is the same as "Simple system example" in simulation presets, with the
  * difference being that it's written in proper JSON notation, as opposed to being a regular object in JavaScript code.
  *
