@@ -7,7 +7,7 @@ SchedLinSim is a process scheduling simulator written in JavaScript. It supports
 
 <br/>
 
-[![simulation preview](./screenshots/preview-0.png)]() <!--- TODO: add link to hosted version -->
+[![simulation preview](./screenshots/preview-0.png)](https://jmakovecki.github.io/SchedLinSim/index.html)
 
 <br/>
 
@@ -20,11 +20,11 @@ SchedLinSim is designed in a manner similar to the Linux kernel scheduler, which
 ## Running a simulation
 > The main use of a simulator.
 
-The easiest way of running a simulation is to open the web application and select a simulation scenario from the included presets. <!--- TODO: add link to hosted version -->
+The easiest way of running a simulation is to open the [web application](https://jmakovecki.github.io/SchedLinSim/index.html) and select a simulation scenario from the included presets.
 
 <br/>
 
-[![presets preview](./screenshots/preview-1.png)]()
+[![presets preview](./screenshots/preview-1.png)](https://jmakovecki.github.io/SchedLinSim/index.html)
 
 <br/>
 
@@ -34,12 +34,12 @@ When the simulation is finished, the simulator will load its results into the GU
 
 <br/>
 
-[![results preview](./screenshots/preview-2.png)]()
+[![results preview](./screenshots/preview-2.png)](https://jmakovecki.github.io/SchedLinSim/index.html)
 
 <br/>
 
 ### Running in the command line
-> Most easily achieved by opening the browser console on either the [GUI](index.html) or the [lightweight command line](simulator/SchedLinSim-console.html) web page.
+> Most easily achieved by opening the browser console on either the [GUI](https://jmakovecki.github.io/SchedLinSim/index.html) or the [lightweight command line](https://jmakovecki.github.io/SchedLinSim/simulator/SchedLinSim-console.html) web page.
 
 When running in the command line, most of the functionality of the simulator gets wrapped up in its namespace, `Simulator`. Executing a simulation in the simulator requires the following commands:
 ```JavaScript
@@ -50,7 +50,7 @@ Simulation definitions are JavaScript objects that contain all the data needed t
 
 Simulator can also be initialized with the name of a preset - for example `Simulator.init("simpleSystemConf")`. In this case the simulator will find and load the preset on its own. All the presets are contained in the object `SimulationPresets`, that is defined in the file [simulator/SimulationPresets.js](simulator/SimulationPresets.js). They can serve as good examples when writing your own simulation definition.
 
-When the simulation is finished, a `SimResult` object is returned, which is described in detail in the [documentation (SimResult)](simulator/docs/index.html#simresult).
+When the simulation is finished, a `SimResult` object is returned, which is described in detail in the [documentation (SimResult)](https://jmakovecki.github.io/SchedLinSim/simulator/docs/index.html#simresult).
 
 ### Multiple runs in the command line
 The interface for running simulations in succession is contained in the object `Simulator.multiRun`. To run, say, 200 simulations in a row, execute the following commands:
@@ -58,7 +58,7 @@ The interface for running simulations in succession is contained in the object `
 Simulator.multiRun.init(definition);
 Simulator.multiRun.run(200);
 ```
-The simulation definition passed to `multiRun.init()` is the same as with single simulation executions and works as described above, so `Simulator.multiRun.init("simpleSystemConf")` will load a preset. The call to the `multiRun.run()` function contains a parameter - the number of simulations that we wish to run. It returns an object with joint simulation results, which is better described in the function's [documentation (Simulator > multiRun > run())](simulator/docs/index.html#simulatormultirunrun).
+The simulation definition passed to `multiRun.init()` is the same as with single simulation executions and works as described above, so `Simulator.multiRun.init("simpleSystemConf")` will load a preset. The call to the `multiRun.run()` function contains a parameter - the number of simulations that we wish to run. It returns an object with joint simulation results, which is better described in the function's [documentation (Simulator > multiRun > run())](https://jmakovecki.github.io/SchedLinSim/simulator/docs/index.html#simulatormultirun).
 
 Individual simulation results of the last sequence of simulations ran by `multiRun` are saved in the array `Simulator.multiRun.results` where they can be viewed by the user.
 
@@ -73,7 +73,7 @@ Scheduling classes exist in a strict hierarchy, they are ordered in a line by pr
 
 The simulator implements a number of scheduling classes and allows ordering them as desired in every simulation. Their implementations can be found in directory `simulator/classes/`.
 
-If one wishes to add a custom scheduling policy into the simulator, one will have to implement a scheduling class of their own. This can be done by following the instructions found in the template [SchedClass-template.js](simulator/docs/templates/SchedClass-template.js). The [documentation](simulator/docs/index.html#schedclass) on the scheduling class object, `SchedClass`, can also be of use in this endeavor.
+If one wishes to add a custom scheduling policy into the simulator, one will have to implement a scheduling class of their own. This can be done by following the instructions found in the template [SchedClass-template.js](simulator/docs/templates/SchedClass-template.js). The [documentation](https://jmakovecki.github.io/SchedLinSim/simulator/docs/index.html#schedclass) on the scheduling class object, `SchedClass`, can also be of use in this endeavor.
 
 <br/>
 
@@ -158,7 +158,7 @@ Most of the time values (and even some others) in process definitions can be def
 
 > SchedLinSim includes a number of resources that help with its usage and development.
 
-- [Documentation](simulator/docs/index.html) of the core parts of SchedLinSim is aimed both at developers and end users running the simulator from the command line. It is written using JSDoc notation and compiled with the help of [Documentation.js](https://documentation.js.org/).
+- [Documentation](https://jmakovecki.github.io/SchedLinSim/simulator/docs/index.html) of the core parts of SchedLinSim is aimed both at developers and end users running the simulator from the command line. It is written using JSDoc notation and compiled with the help of [Documentation.js](https://documentation.js.org/).
 
 - [Simulation-definition-template.js](simulator/docs/templates/Simulation-definition-template.js) is a template document with comments and explanations that serves as a guide to writing simulation definitions.
 
@@ -169,12 +169,13 @@ Most of the time values (and even some others) in process definitions can be def
 ## Project organization
 SchedLinSim is organized into the following directories:
 
-> - **root directory** contains the GUI, its related directories and project presentation files.
+- **root directory** contains the GUI, its related directories and project presentation files.
 	- **simulator** contains the SchedLinSim.js main file that can be used as a library, related files and presets.
 		- **classes** contains the files that implement simulator's scheduling classes.
 		- **docs** contains the simulator documentation.
 			- **templates** contains templates for simulation definitions and scheduling classes.
 
+The project repository is published at: [https://github.com/jmakovecki/SchedLinSim](https://github.com/jmakovecki/SchedLinSim)
 <br/>
 
 ## Credits and licence
